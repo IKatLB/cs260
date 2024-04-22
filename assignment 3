@@ -105,7 +105,7 @@ return;
 node *head = FindHead(Q);
 
 if(head->behind == nullptr){
-cout <<"head of queue with value " << Q->tail->value << "has been removed" << endl;
+cout <<"head removed, value was: " << Q->tail->value << endl;
 Q->tail = nullptr;
 return;
 }
