@@ -61,16 +61,17 @@ N = N->next;
 return N;
 }
 
-//adds two nodes to queue and checks if head is expected memory value
+//checks empty list for nullpointer adds two nodes to list and then checks if find node returns expected values for either
+//need two nodes since one is tail and the other is pointed at by a node, accounts for all possible positions of found node
 bool TestFindNode(){
 list TestQueue;
 node n1;
+node n2;
 node *TestNull = FindNode(&TestQueue,0);
-if(TestNull != nullptr){
+if(TestNull != nullptr){ //checks expected result for empty list
     return false;
-
-
 }
+
 TestQueue.length = 1;
 TestQueue.tail = &n1;
 node *TestNode = FindNode(&TestQueue, 1);
@@ -78,11 +79,60 @@ node *TestNode = FindNode(&TestQueue, 1);
 if(TestNode != &n1){
 return false;
 }
+TestQueue.length = 2;
+TestQueue.tail = &n2;
+n2.next = &n1;
 
-else{
+TestNode = FindNode(&TestQueue, 2);
+if(TestNode != &n1){
+return false;
+
+}
+else {
 
     return true;
 }
+
+
+
 }
 
+//returns value of node at selected position, simply refers to value at node found using find node function, refer to TestFindNode for test function
+int get(list *L, int pos){
+
+node *FoundNode = FindNode(L, pos);
+int value = FoundNode -> value;
+return value;
+}
+
+
+//adds node in L at position pos of value val, will move other values to account for new node
+void add(list *L, int pos, int val){
+
+if(pos < 1 or pos > ((L->length)+1) ){
+
+    cout << "invalid postion" << endl;
+    return;
+}
+node *newnode;
+node *oldnode = FindNode(L, pos);
+
+//new values
+newnode ->behind = oldnode->behind;
+newnode ->next = oldnode;
+
+//reassign old values
+oldnode ->behind = newnode;
+
+++L->length;
+
+}
+
+//test function for add function, initialize list, attempt to add at two invalid postions, dont know dual typed funcitons yet so will have to rely on
+//terminal values for error catching, then adds normally to a list and checks to make sure value is expected 
+bool TestAdd(){
+
+
+
+}
 
