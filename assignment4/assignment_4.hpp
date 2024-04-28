@@ -128,11 +128,49 @@ oldnode ->behind = newnode;
 
 }
 
-//test function for add function, initialize list, attempt to add at two invalid postions, dont know dual typed funcitons yet so will have to rely on
-//terminal values for error catching, then adds normally to a list and checks to make sure value is expected 
+//test function for add function, initialize list, adds normally to a list and checks to make sure value is expected. If I knew dual typed functions
+//I could test for invalid cases
 bool TestAdd(){
+
+list L;
+
+add(&L,1,2);
+int output = get(&L,1);
+if(output != 2 or L.length != 1){
+
+    return false;
+}
+else{
+    return true;
+}
+}
+
+
+void remove(list *L, int pos){
+
+node *kill = FindNode(L,pos);
+
+kill->behind->next = kill->next;
+kill->next->behind = kill->behind;
+L->length -= 1;
+
+}
+
+//assumes add works correctly, add item and remove it, make sure list is empty
+bool TestRemove(){
+
+list L;
+add(&L,1,2);
+remove(&L,1);
+if(L.tail != nullptr or L.length != 0){
+    return false;
+}
+
+return true;
 
 
 
 }
+
+
 

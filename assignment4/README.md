@@ -3,8 +3,8 @@ All assignment requirements are in header file. CPP file simply executes the tes
 
 add function: line 110
 
-remove function:
+remove function: 148
 
 get function: line 100
 
-test functions: line 66, line 133,
+test functions: line 66, line 132, 158
