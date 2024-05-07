@@ -6,5 +6,8 @@
 #define thing
 //thing definition
 #endif
-
 //union decleration
+
+
+//trees
+//no cycles so children may not point to parents.
