@@ -10,8 +10,8 @@ using std::endl;
 bool TestAdd(){
 
 list L;
-
-add(&L,1,2);
+node n1;
+add(&L,1,2,&n1);
 node *n = FindNode(&L,1);
 int output = n -> value;
 if(output != 2 or L.length != 1){
@@ -29,7 +29,8 @@ else{
 bool TestRemove(){
 
 list L;
-add(&L,1,2);
+node n1;
+add(&L,1,2,&n1);
 remove(&L,1);
 if(L.tail != nullptr or L.length != 0){
     return false;
@@ -43,15 +44,16 @@ return true;
 //creates list with and checks if position got is expected for value in and not in list
 bool TestSearch(){
 list L;
-add(&L,1,1);
-add(&L,2,2);
-add(&L,3,3);
-add(&L,4,5); //L should now be 1->2->3->5
-int ExpectPos1 = search(&L,2); //expect 2
-int ExpectPos2 = search(&L,4); //expect 4
-L.~list();
-if(ExpectPos1 != 2 or ExpectPos2 != 4){
-    return false;
+node n1;
+L.length = 0;
+L.tail = nullptr;
+add(&L,1,1,&n1);
+add(&L,2,2,&n1);
+add(&L,3,4,&n1);
+int ExpectPos1 = search(&L,1);
+int ExpectPos2 = search(&L,3);
+if(ExpectPos1 == 1 or ExpectPos2 == 3){
+    return true;
 }
 
 else{

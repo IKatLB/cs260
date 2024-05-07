@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <cmath>
 
@@ -25,25 +26,26 @@ using std::floor;
 
 */
 
+
 //node of linked list data structure, .next points to next node in list, by default is nullptr
 struct node {
 
-int value = 0;
-node *next = nullptr;
-node *behind = nullptr;
-
+int value;
+node *next;
+node(){
+    value = 0;
+    next = nullptr;
+}
 };
 
 //list struct contains lenth and tail pointer, by default is length = 0, and tail pointer is null pointer
 struct list {
 
-int length = 0;
-node *tail = nullptr;
-~list(){
-    while(tail != nullptr){
-        delete tail;
-    }
-
+int length;
+node *tail;
+list(){
+    length = 0;
+    tail = nullptr;
 }
 
 };
@@ -66,51 +68,56 @@ return N;
 
 //returns postion of a given value, if value is not in list, returns position value should be at, if list is empty returns 1
 int search(list *L, int val){
-    if(L->length == 0){
-        return 1;
-    }
 int head = L->length;
 int tail = 1;
 while(tail <= head){
-int check = floor((head-tail)/2);
-int CheckVal = FindNode(L,check) -> value;
-if(val > CheckVal){
-tail = CheckVal+1;
-}
+int CheckPos = floor((head-tail)/2+1);
 
+node *CheckNode = FindNode(L,CheckPos);
+
+int CheckVal = CheckNode -> value;
+
+if(val == CheckVal){
+return CheckPos;
+}
 else if(val < CheckVal){
 head = CheckVal-1;
 }
+else if(val > CheckVal){
+tail = CheckVal+1;
+}
 else{
-    return check;
+    return 0;
 }
 }
-
 return tail;
-}
 
+}
 
 //adds node in L at position pos of value val, will move other values to account for new node
-void add(list *L, int pos, int val){
+void add(list *L, int pos, int val, node*newnode){
 
 if(pos < 1 or pos > ((L->length)+1) ){
     return;
 }
 
-node *newnode;
-newnode->value = val;
+
+newnode->value =0;
+newnode ->next = nullptr;
+
 
 node *oldnode = FindNode(L, pos);
-if(oldnode == nullptr){
+if(oldnode == L->tail){
     L->tail = newnode;
+    newnode -> value = val;
+    newnode -> next = oldnode;
 }
 else{
-newnode ->behind = oldnode->behind;
-newnode ->next = oldnode;
-
-//reassign old values
-oldnode ->behind = newnode;
+    newnode -> next = oldnode->next;
+    newnode->value = oldnode -> value;
+    oldnode -> value = val;
 }
+
 
 ++L->length;
 }
@@ -120,8 +127,8 @@ void remove(list *L, int pos){
 
 node *kill = FindNode(L,pos);
 
-kill->behind->next = kill->next;
-kill->next->behind = kill->behind;
+kill = kill->next;
+
 L->length -= 1;
 return;
 }
