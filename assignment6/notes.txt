@@ -1,0 +1,78 @@
+/*
+
+Implement a binary search tree that includes:
+
+    nodes to store values,
+
+    node struct which has value and left and right node pointers, 
+    constructor will by default make value = 0, and left and right = nullptr
+
+    tree struct to hold root node
+    constructor root points to nullptr
+    destructor which deletes all nodes in tree
+
+
+    an add function that adds a new value in the appropriate location based on our ordering rules,
+    (I likely used less than or equal to going to the left and greater than values going to the right)
+
+    Node Method: node * basic decision function takes input node and value, then decides whether to go left or right, returns subsequent node pointer (will decide left if value is equal)
+    TestDecision: create 3 nodes, root:2, left:1, and right:3. call decision(5) on root node, expect right
+
+
+    Tree Method: void add function takes input tree calls decision function on current node and if returned value is nullptr adds node of input value there.
+    adding will work by holding decision input until decision returns, if decision is null ptr, check whether value is <= or > input value, and add node to correct position
+    note add will have potential for memory leak
+
+    TestAdd: bool create tree, call add 2(empty root case), call add 1, tree.root.left expected value is 1 (less than case), call add 3, tree.root.right expected values is 3(greater than case)
+    call add 5, tree.root.right.right expected value is 5(non root add case).
+    destruct tree.
+
+    a remove function that finds and removes a value and then picks an appropriate replacement node,
+    (successor is a term often used for this)
+
+    will rely on find node. There will be two remove functions, one for if there are two children, and one for all other cases. 
+
+    Tree Method: void Remove one(for all other cases then two children) 
+    if found nodes children are both nullptr -> delete found node
+    else if found node has one child -> store that childs memory, replace found nodes value with childs value, make found node point to childs children
+    delete child 
+
+    
+
+    Tree Method: void remove two (for two children case) 
+    create new tree called subtree whos root is right child to node which is to be removed
+    while loop
+    set dummy value to be current node value
+    call decision of current node with dummy value
+    repeat until nullptr is returned
+    current node is now smallest value in subtree
+    make subtree root value equal to current node value.
+    call remove one on current node within subtree
+    delete subtree
+
+    Tree Method: void Remove, general remove, decides to either use remove one or two. 
+    takes input value will first call find node on value, if findnode returns nullptr, return. otherwise node is found
+    if node left and right are not nullptr call remove two on node
+    else call remove 1 on node
+
+    
+
+
+    we have at least one tree traversal function (I recommend starting with an in-order traversal!)
+
+    Tree Method: node * find node takes input tree and value, starts at root, calls decision function over and over until 1 of two things happens.
+    if value is equal to the value of the current node in which case return that nodes pointer
+    else if decision is nullptr, return nullptr -> desegment error possibility
+    else continue the calling decision
+
+    TestFindNode: bool rely on add being tested, create tree, call add 20, call findnode 20, expected value tree.root (found root case), call add 10, call add 30.
+    call find on either added node expected values are 10 and 20 (other node found case)
+
+
+    Bonus if you implement the three common traversals (pre-order, post-order, in-order)
+    More Bonus if you also include a breadth-first traversal (sometimes called a level-order search)
+
+
+*/
+//foo(int &var){stuff} actually edit var object at its memory
+ 
