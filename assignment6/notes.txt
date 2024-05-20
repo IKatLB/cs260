@@ -46,9 +46,9 @@ Implement a binary search tree that includes:
     call decision of current node with dummy value
     repeat until nullptr is returned
     current node is now smallest value in subtree
-    make subtree root value equal to current node value.
+    make node to be removed value equal to current node value.
     call remove one on current node within subtree
-    delete subtree
+    delete subtree (deleting here should not delete nodes within subtree)
 
     Tree Method: void Remove, general remove, decides to either use remove one or two. 
     takes input value will first call find node on value, if findnode returns nullptr, return. otherwise node is found
@@ -74,5 +74,4 @@ Implement a binary search tree that includes:
 
 
 */
-//foo(int &var){stuff} actually edit var object at its memory
  
