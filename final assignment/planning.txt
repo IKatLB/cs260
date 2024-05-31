@@ -1,0 +1,78 @@
+1.) (20%) Create a design before you start coding that describes or shows how a graph structure could be used to store some kinds of data and attempt to solve 
+some kind of problem (yes, this can be a game that needs a graph to represent a map!),
+
+2.) (20%) Create some tests (at least two for each piece of functionality) before you start coding...
+
+(40%) Implement a graph class with at least (this category effectively combines implementation and specification, partly to emphasize getting the algorithms working!):
+
+3.)    (5%) a function to add a new vertex to the graph (perhaps add_vertex(vertex_name)),
+
+4.)    (5%) a function to add a new edge between two vertices of the graph (perhaps add_edge(source, destination) or source.add_edge(destination)),
+
+5.)    (15%) a function for a shortest path algorithm (perhaps shortest_path(source, destination)),
+
+6.)    (15%) a function for a minimum spanning tree algorithm (example min_span_tree()).
+
+7.) (10%) Analyze the complexity of all of your graph behaviors (effectively a part of our documentation for grading purposes),
+
+8.) (10%) Once you have implemented and tested your code, add to the README file what line(s) of code or inputs and outputs show your work meeting each of the 
+above requirements (or better, include a small screen snip of where it meets the requirement!).
+
+1.) this document
+
+
+3 - 6.)
+
+define edges and nodes in seperate header files since they will rely on each other in their definitions
+
+
+struct edge
+
+int weight
+node source point
+node end point
+
+
+
+
+struct node
+
+int name
+vector<edge *> neighbors 
+
+
+struct graph
+
+vector<edge *> edges
+vector<node *> nodes
+
+
+3.)
+graph method add node 
+
+node NewNode = new node;
+
+
+
+4.)
+
+
+5.) Dijkstra's algorithm
+
+
+
+
+
+6.) Kruskal's algorithm
+
+
+
+
+
+
+
+
+
+
+
+
