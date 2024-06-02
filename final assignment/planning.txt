@@ -29,8 +29,8 @@ define edges and nodes in seperate header files since they will rely on each oth
 struct edge
 
 int weight
-node source point
-node end point
+node source 
+node end 
 
 
 
@@ -41,29 +41,101 @@ int name
 vector<edge *> neighbors 
 
 
+
 struct graph
 
 vector<edge *> edges
 vector<node *> nodes
 
 
-3.)
-graph method add node 
+graph method find node, (int NameToFind), returns int index
+int index = -1
+for(node *i = this.nodes.begin(); i != this.nodes.end(); ++i){
+    if(i->name == NameToFind){
+        index = distance(this.nodes.begin(), i)
+        return index
+    }
+}
+return index
 
-node NewNode = new node;
+3.)
+void graph method add node, (int name)
+cases:
+node is in graph, return
+else add node
+
+if(find node(name) == -1){
+    return
+}
+else{
+node NewNode;
+NewNode.name = name;
+this.nodes.push_back(NewNode)
+}
+
 
 
 
 4.)
 
+graph method add edge (int name1, name 2, int weight) //weight in back so default can be 1
+cases:
+nodes are already connected, just return
+either node does not exist in graph, add them
+nodes exist and are not already connected, adds edge with source of name1 and end of name2, then update either nodes neighbor vector to include this edge
+
+int name1_index = find node(name1)
+int name2_index = find node(name2)
+
+if(name1_index == -1){ //nodes dont exist
+this.addnode.(name 1)
+name1_index = findnode(name1)
+}
+if(name2_index == -1){
+this.addnode.(name 2)
+name2_index = findnode(name2)
+}
+
+for(edge *i = this.edges.begin(); i != this.edges.end(); ++i){ //already in graph
+    if(i->source == (name1 or name2) and i->end == (name1 or name2)){ //accounts for both cases of source and end, unsure if we are allowing edges between the same point but allows for that as well
+        return
+    }
+}
+
+edge NewEdge;
+NewEdge.weight = weight
+NewEdge.source = this.nodes[name1_index]
+NewEdge.end = this.nodes[name2_index]
+this.nodes[name1_index].neighbors.push_back(NewEdge)
+this.nodes[name2_index].neighbors.push_back(NewEdge)
+this.edges.push_back(NewEdge)
+
+
+
+
 
 5.) Dijkstra's algorithm
+
+consider equal weight case
+
+list of unvisited nodes
+each node associated with distance value
+previous node value for each node
+source node distance value = 0
+if no unvisited neighbors skip
+find weight of neighbor edges and if neighbor nodes current distance is greater than current node weight  then neighbor node distance = current weight + edge weight 
+if swaped, make previous node of neighbor node = current node
+remove current node from visited nodes
+select node with smallest distance in unvisited nodes as new current node
+repeat until no nodes remain in unvisited nodes, at which point see destinations previous node and retrace steps to source node.
 
 
 
 
 
 6.) Kruskal's algorithm
+
+exit condition for non connected tree
 
 
 
