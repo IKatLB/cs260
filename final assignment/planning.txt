@@ -130,16 +130,21 @@ select node with smallest distance in unvisited nodes as new current node
 repeat until no nodes remain in unvisited nodes, at which point see destinations previous node and retrace steps to source node.
 
 
+vector<node*> unvisited = this.nodes
+vector<int> distance;
+
 
 
 
 6.) Kruskal's algorithm
 
-exit condition for non connected tree
-
-
-
-
+will return set of edges
+exit condition for non connected tree -> not needed since algorythm will work anyways
+sort edges by weight
+start at lowest weight
+check if edge will create a cycle -> how to?
+if no add edge to mst
+repeat until no more edges
 
 
 
