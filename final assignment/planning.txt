@@ -29,8 +29,8 @@ define edges and nodes in seperate header files since they will rely on each oth
 struct edge
 
 int weight
-node source 
-node end 
+node* source 
+node* end 
 
 
 
@@ -48,16 +48,17 @@ vector<edge *> edges
 vector<node *> nodes
 
 
-graph method find node, (int NameToFind), returns int index
-int index = -1
-for(node *i = this.nodes.begin(); i != this.nodes.end(); ++i){
+find node, (vector<node*> vec, int NameToFind), returns int index //outside function since we want to call this on unvisited nodes in shortest path algorithm
+{
+    int index = -1
+for(node *i = vec.nodes.begin(); i != vec.nodes.end(); ++i){
     if(i->name == NameToFind){
-        index = distance(this.nodes.begin(), i)
+        index = distance(vec.nodes.begin(), i)
         return index
     }
 }
 return index
-
+}
 3.)
 void graph method add node, (int name)
 cases:
@@ -122,16 +123,71 @@ list of unvisited nodes
 each node associated with distance value
 previous node value for each node
 source node distance value = 0
-if no unvisited neighbors skip
+if no unvisited neighbors skip 
 find weight of neighbor edges and if neighbor nodes current distance is greater than current node weight  then neighbor node distance = current weight + edge weight 
 if swaped, make previous node of neighbor node = current node
 remove current node from visited nodes
 select node with smallest distance in unvisited nodes as new current node
 repeat until no nodes remain in unvisited nodes, at which point see destinations previous node and retrace steps to source node.
 
+int FindSmallestVal(vector<int> input){
+    int index = 0;
+    int val = 0;
+    for(int* i = input.begin(); i != input.end(); ++i){
+        if(*i != -1 and *i < val){
+            val = *i;
+            index = i - input.begin();
+        }
+    }
+return index;
 
+}
+
+
+shortest path (int source_index, int end_index)
+source = this.nodes[source_index]
 vector<node*> unvisited = this.nodes
 vector<int> distance;
+vector<node*> PrevNode;
+
+for(node* i = unvisited.begin(); i != unvisited.end(); ++i){ //intialize sets
+    int index = i - unvisited.begin()
+    if(*i == source){
+        distance[index] = 0
+    }
+    else{
+        distance[index] = -1 //akin to infinity
+    }
+    PrevNode[index] = -1 //akin to no previous node
+}
+
+
+bool repeat = true;
+while(repeat){
+CurrentNodeIndex = FindSmallestVal(distance);
+CurrentNode = unvistied[CurrentNodeIndex];
+vector<edge*> neighbors = CurrentNode.neighbors
+for(edge* i = neighbors.begin(); i != neighbors.end(), ++i){
+if(i->*source == CurrentNode){ //needs to be dereferanced cause memory location of current node is in unvisited, source is in this.nodes
+CurrentNeighbor = i->*end
+}
+else{
+    CurrentNeighborName = i->source->name
+}
+CurrentNeighborIndex = findnode(unvisited, CurrentNeighborName)
+NewDistance = distance[CurrentNodeIndex] + i->weight;
+if(distace[CurrentNeighborIndex] == -1 or NewDistance < distace[CurrentNeighborIndex]){
+    distace[CurrentNeighborIndex] = NewDistance
+    PrevNode[CurrentNeighborIndex] = CurrentNode->name
+}
+unvisited.erase(CurrentNodeIndex)
+
+
+}
+
+if(unvisited.empty()){repeat = false;}
+}
+
 
 
 
@@ -145,6 +201,29 @@ start at lowest weight
 check if edge will create a cycle -> how to?
 if no add edge to mst
 repeat until no more edges
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
