@@ -198,9 +198,26 @@ will return set of edges
 exit condition for non connected tree -> not needed since algorythm will work anyways
 sort edges by weight
 start at lowest weight
-check if edge will create a cycle -> how to?
-if no add edge to mst
-repeat until no more edges
+check if edge will create a cycle{
+    visit each node and add to visited list by traversing tree
+    if visit node twice dont add edge,
+    repeat until no more unvisited then add edge
+}
+
+
+graph method min_span_tree(){
+
+vector<int> weights;
+for(edge *i = this.edges.begin(); i != this.edges.end(); ++i){
+    
+}
+
+
+
+
+}
+
+
 
 
 
