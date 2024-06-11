@@ -1,4 +1,4 @@
-#pragma once
+
 #include <iostream>
 #include <cmath>
 
@@ -43,21 +43,20 @@ struct list {
 
 int length;
 node *tail;
+
 list(){
     length = 0;
     tail = nullptr;
 }
 
-};
-
 //cycles through list position number of times and returns pointer to node found at position index
-node *FindNode(list *L, int position){
-node *N = L->tail;
-if(N == nullptr or position > L->length){
+node *FindNode(int position){
+node *N = this->tail;
+if(N == nullptr or position > this->length){
 return nullptr; //if the list is empty or if requested postion is not in list return nullptr
 }
 
-for(int NIndex = 1; NIndex < position; ++NIndex){
+for(int NIndex = 1; NIndex != position; ++NIndex){
 
 N = N->next;
 
@@ -66,14 +65,54 @@ N = N->next;
 return N;
 }
 
-//returns postion of a given value, if value is not in list, returns position value should be at, if list is empty returns 1
-int search(list *L, int val){
-int head = L->length;
-int tail = 1;
-while(tail <= head){
-int CheckPos = floor((head-tail)/2+1);
 
-node *CheckNode = FindNode(L,CheckPos);
+void add(int pos, int val){
+
+if(pos < 1 or pos > ((this->length)+1) ){
+    return;
+}
+
+node* NewNode = new node;
+
+NewNode->value = val;
+NewNode ->next = nullptr;
+node *oldnode = FindNode(pos);
+
+if(this->tail == nullptr){
+this->tail = NewNode;
+++this->length;
+return;
+}
+
+else if(oldnode == this->tail){
+this->tail = NewNode;
+NewNode->next = oldnode;
+++this->length;
+return;
+}
+else if(oldnode == nullptr){//pos must be at end of list +1
+oldnode = this->FindNode(pos-1);
+oldnode->next = NewNode;
+++this->length;
+return;
+}
+else{
+
+NewNode -> next = oldnode->next;
+oldnode-> next = NewNode;
+++this->length;
+return;
+}
+}
+
+//returns postion of a given value, if value is not in list, returns position value should be at, if list is empty returns 1
+int search(int val){
+int head = this->length;
+int tail = 1;
+while(tail < head){
+int CheckPos = floor(((head-tail)/2)+1); //float error could be rounding down too far
+
+node *CheckNode = this->FindNode(CheckPos);
 
 int CheckVal = CheckNode -> value;
 
@@ -94,49 +133,56 @@ return tail;
 
 }
 
-//adds node in L at position pos of value val, will move other values to account for new node
-void add(list *L, int pos, int val, node*newnode){
-
-if(pos < 1 or pos > ((L->length)+1) ){
+void remove(int pos){
+node *behind = this->FindNode(pos-1);
+node *Node = this->FindNode(pos);
+node *next = this->FindNode(pos+1);
+if(Node==nullptr){
     return;
+}    
+if(behind == nullptr and next == nullptr){
+this->tail = nullptr;
+delete Node;
+return;
+}
+else if(behind == nullptr){
+this->tail = next;
+delete Node;
+return;
+}
+else if(next == nullptr){
+behind->next = nullptr;
+delete Node;    
+return;
 }
 
-
-newnode->value =0;
-newnode ->next = nullptr;
-
-
-node *oldnode = FindNode(L, pos);
-if(oldnode == L->tail){
-    L->tail = newnode;
-    newnode -> value = val;
-    newnode -> next = oldnode;
-}
-else{
-    newnode -> next = oldnode->next;
-    newnode->value = oldnode -> value;
-    oldnode -> value = val;
-}
-
-
-++L->length;
-}
-
-
-void remove(list *L, int pos){
-
-node *kill = FindNode(L,pos);
-
-kill = kill->next;
-
-L->length -= 1;
+behind->next = next;
+delete Node;
 return;
 }
 
 //insert takes in a list and a value and inserts that value into its sorted position.
-void insert(list *L, int val){
+void insert(int val){
+int pos = this->search(val);
+this->add(pos,val);
+return;
 
-
-
-    return;
+    
 }
+
+
+
+~list(){
+node* kill = this->tail;
+while(kill != nullptr){
+node *next = kill->next;
+delete kill;
+kill = next;
+}
+
+}
+};
+
+
+
+
