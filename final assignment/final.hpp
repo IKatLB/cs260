@@ -55,7 +55,7 @@ vector<node*> nodes;
 void AddNode(int name){
 if(FindNode(this->nodes, name) != -1){return;} //node already exists
 
-node *NewNode; 
+node *NewNode = new node; 
 NewNode->name = name;
 this->nodes.push_back(NewNode);
 }
@@ -79,13 +79,14 @@ if(EndIndex == -1){
 
 
 //need to account for edge already existing
-for(int i = 0; i < this->edges.size(); ++i){
+for(int i = 0; i != this->edges.size(); ++i){
+//if source = (source name or end name) and end = (source name or end name)
 if((this->edges[i]->source->name == SourceName or this->edges[i]->source->name == EndName) and (this->edges[i]->end->name == SourceName or this->edges[i]->end->name == EndName)){
 return;
 }
 }
 
-edge* NewEdge;
+edge* NewEdge = new edge; 
 NewEdge->weight = weight;
 NewEdge->source = this->nodes[SourceIndex];
 NewEdge->end = this->nodes[EndIndex];
@@ -96,12 +97,31 @@ this->edges.push_back(NewEdge);
 }
 
 
-//shortest path
+//shortest path will use Dijkstra's algorithm
+vector<edge*> ShortestPath(int SourceIndex, int EndIndex){
+
+
+
+
+
+
+
+
+}
+
 
 //minimum spanning tree
 
-//graph destructor
 
+//graph destructor
+~graph(){
+    for(int i = 0; i != this->nodes.size(); ++i){
+        delete this->nodes[i];
+    }
+    for(int i = 0; i != this->edges.size(); ++i){
+        delete this->edges[i];
+    } 
+}
 
 };
 

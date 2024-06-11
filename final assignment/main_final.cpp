@@ -10,7 +10,12 @@ cout << "FindNode error" << endl;
 else if(!test_SmallestValue()){
     cout << "SmallestValue error" << endl;
 }
-
+else if(!test_AddNode()){
+    cout << "AddNode error" << endl;
+}
+else if(!test_AddEdge()){
+    cout << "AddEdge error" << endl;
+}
 
 else{cout << "no errors" << endl;}
 return EXIT_SUCCESS;
