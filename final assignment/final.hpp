@@ -40,7 +40,7 @@ for(int i = 0; i < input.size(); ++i){ //should automatically exit for empty inp
     }
     
 }
-
+if(index == -1){index = 0;}//return first input in the event everything is -1, would happen in dissconnected graph
 return index;
 }
 
@@ -58,6 +58,7 @@ if(FindNode(this->nodes, name) != -1){return;} //node already exists
 node *NewNode = new node; 
 NewNode->name = name;
 this->nodes.push_back(NewNode);
+delete NewNode;
 }
 
 //add edge
@@ -93,22 +94,87 @@ NewEdge->end = this->nodes[EndIndex];
 this->nodes[SourceIndex]->neighbors.push_back(NewEdge);
 this->nodes[EndIndex]->neighbors.push_back(NewEdge);
 this->edges.push_back(NewEdge);
-
+delete NewEdge;
 }
 
 
 //shortest path will use Dijkstra's algorithm
-vector<edge*> ShortestPath(int SourceIndex, int EndIndex){
+//disconected end node will result in nonsense output but will still output
+vector<node*> ShortestPath(int SourceIndex, int EndIndex){
+node *source = this->nodes[SourceIndex];
+vector<node*> unvisited = this->nodes;
+//intialize sets
+vector<int> distance(unvisited.size(),-1); //will track asociated node by index relation
+distance[SourceIndex] = 0;
+vector<int> UnvisitiedDistance(unvisited.size(),-1); //will track asociated node by index relation
+UnvisitiedDistance[SourceIndex] = 0;
+vector<node*> PrevNode(unvisited.size(), nullptr); //will track asociated node by index relation
 
+bool repeat = true;
 
+while(repeat){
 
+int CurrentNodeIndex = SmallestValue(UnvisitiedDistance);
+node* CurrentNode = unvisited[CurrentNodeIndex];
+CurrentNode->MakeNeighborNodes();
 
-
-
-
-
+bool UnvisitedNeighbors = false;
+//check for unvisited neighbors
+for(int i = 0; i != CurrentNode->NeighborNodes.size(); ++i){
+    int NeighborName = CurrentNode->NeighborNodes[i]->name;
+    int NeighborIndex = FindNode(unvisited,NeighborName);
+    if(NeighborIndex != -1){UnvisitedNeighbors = true;}
+}
+if(!UnvisitedNeighbors){
+    continue;
 }
 
+//iterate through neighbor nodes and update distances
+//if distance is updated then make neighbors previous node = current node
+for(int i = 0; i != CurrentNode->neighbors.size(); ++i){
+
+int CurrentDistance = distance[CurrentNodeIndex]+CurrentNode->neighbors[i]->weight;
+
+node* NeighborNode;
+if(CurrentNode == CurrentNode->neighbors[i]->source){
+NeighborNode = CurrentNode->neighbors[i]->end;
+}
+else{
+NeighborNode = CurrentNode->neighbors[i]->source;
+}
+
+int NeighborName = NeighborNode->name;
+int NeighborIndex = FindNode(this->nodes,NeighborName);
+
+if(distance[NeighborIndex] > CurrentDistance or distance[NeighborIndex] == -1){
+distance[NeighborIndex] = CurrentDistance;
+PrevNode[NeighborIndex] = CurrentNode;
+}
+
+}//end main for loop
+
+
+
+unvisited.erase(unvisited.begin()+CurrentNodeIndex);
+UnvisitiedDistance.erase(UnvisitiedDistance.begin()+CurrentNodeIndex);
+
+if(CurrentNode == this->nodes[EndIndex]){repeat = false;}
+}//end main while loop
+
+vector<node*> output;
+output.push_back(this->nodes[EndIndex]);
+
+//we are gaurenteed to have path to end at this point unless graph is disconected
+node* previous = PrevNode[EndIndex];
+
+while(previous != nullptr){
+output.push_back(previous);
+int NextIndex = FindNode(this->nodes,previous->name);
+previous = PrevNode[NextIndex];
+}
+
+return output;
+}//end shortest path
 
 //minimum spanning tree
 
