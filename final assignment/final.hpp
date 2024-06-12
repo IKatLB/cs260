@@ -1,5 +1,6 @@
 #include "node.hpp"
 #include "edges.hpp"
+
 //include vector and using std::vector in node.hpp
 
 //define helper functions outside which need to work on vectors in general
@@ -29,14 +30,25 @@ if(vec.size() == 0){
     return index;
 }
 
-for(vector<node*>::iterator i = vec.begin(); i != vec.end(); ++i){
-node* n = *i;
+for(int i = 0; i != vec.size(); ++i){
+node* n = vec[i];
 if(n->name == NameToFind){
-    index = distance(vec.begin(), i);
+    index = i;
     return index;
 } 
 
 }
+return index;
+}
+
+int FindEdge(vector<edge*> vec, int Node1, int Node2){// returns -1 if not in vector
+    int index = -1;
+    for(int i = 0; i != vec.size(); ++i){
+        if((vec[i]->source->name == Node1 or vec[i]->source->name == Node2) and (vec[i]->end->name == Node1 or vec[i]->end->name == Node2)){
+            index = i;
+            return index;
+        }
+    }
 return index;
 }
 
@@ -75,7 +87,7 @@ if(FindNode(this->nodes, name) != -1){return;} //node already exists
 node *NewNode = new node; 
 NewNode->name = name;
 this->nodes.push_back(NewNode);
-delete NewNode;
+
 }
 
 //add edge
@@ -95,6 +107,8 @@ if(EndIndex == -1){
     EndIndex = FindNode(this->nodes,EndName);
 }
 
+node* source = this->nodes[SourceIndex];
+node* end = this->nodes[EndIndex];
 
 //need to account for edge already existing
 for(int i = 0; i != this->edges.size(); ++i){
@@ -104,14 +118,15 @@ return;
 }
 }
 
-edge* NewEdge = new edge; 
+edge *NewEdge = new edge; 
 NewEdge->weight = weight;
-NewEdge->source = this->nodes[SourceIndex];
-NewEdge->end = this->nodes[EndIndex];
-this->nodes[SourceIndex]->neighbors.push_back(NewEdge);
-this->nodes[EndIndex]->neighbors.push_back(NewEdge);
+NewEdge->source = source;
+NewEdge->end = end;
 this->edges.push_back(NewEdge);
-delete NewEdge;
+source->neighbors.push_back(NewEdge);
+end->neighbors.push_back(NewEdge);
+
+
 }
 
 
@@ -129,9 +144,8 @@ vector<int> UnvisitiedDistance(unvisited.size(),-1); //will track asociated node
 UnvisitiedDistance[SourceIndex] = 0;
 vector<node*> PrevNode(unvisited.size(), nullptr); //will track asociated node by index relation
 
-bool repeat = true;
 
-while(repeat){
+while(!unvisited.empty()){
 
 int CurrentNodeIndex = SmallestValue(UnvisitiedDistance);
 node* CurrentNode = unvisited[CurrentNodeIndex];
@@ -145,11 +159,14 @@ for(int i = 0; i != CurrentNode->NeighborNodes.size(); ++i){
     if(NeighborIndex != -1){UnvisitedNeighbors = true;}
 }
 if(!UnvisitedNeighbors){
+    unvisited.erase(unvisited.begin()+CurrentNodeIndex);
+    UnvisitiedDistance.erase(UnvisitiedDistance.begin()+CurrentNodeIndex);
     continue;
 }
 
 //iterate through neighbor nodes and update distances
 //if distance is updated then make neighbors previous node = current node
+
 for(int i = 0; i != CurrentNode->neighbors.size(); ++i){
 
 int CurrentDistance = distance[CurrentNodeIndex]+CurrentNode->neighbors[i]->weight;
@@ -177,25 +194,33 @@ PrevNode[NeighborIndex] = CurrentNode;
 unvisited.erase(unvisited.begin()+CurrentNodeIndex);
 UnvisitiedDistance.erase(UnvisitiedDistance.begin()+CurrentNodeIndex);
 
-if(CurrentNode == this->nodes[EndIndex]){repeat = false;}
+
+
 }//end main while loop
 
-vector<int> output;
-output.push_back(this->nodes[EndIndex]->name);
+
+
+
+vector<int> output(1,EndName);
 
 //we are gaurenteed to have path to end at this point unless graph is disconected
 node* previous = PrevNode[EndIndex];
 
 while(previous != nullptr){
+
 output.push_back(previous->name);
+
 int NextIndex = FindNode(this->nodes,previous->name);
 previous = PrevNode[NextIndex];
 }
-
 return output;
+
 }//end shortest path
 
 //minimum spanning tree
+
+
+
 
 
 //graph destructor

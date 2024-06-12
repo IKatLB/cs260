@@ -194,7 +194,7 @@ if(unvisited.empty()){repeat = false;}
 
 6.) Kruskal's algorithm
 
-will return set of edges
+will return set of eges
 exit condition for non connected tree -> not needed since algorythm will work anyways
 sort edges by weight
 start at lowest weight

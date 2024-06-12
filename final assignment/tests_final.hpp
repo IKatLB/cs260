@@ -1,7 +1,5 @@
 #include "final.hpp"
-#include<iostream>
 
-using std::cout, std::endl;
 
 bool test_FindNode(){
 bool a = false; //case 1: empty input vector
@@ -58,7 +56,7 @@ G.AddNode(1);
 if(G.nodes.size() == size){ //size should be same as before
     c = true;
 }
-cout<<c<<endl;
+
 if(a and b and c){
     return true;
 }
@@ -109,12 +107,21 @@ bool test_ShortestPath(){
     G2.AddEdge(2,4,3);
     G2.AddEdge(3,4,4);
 
+
     vector<int> path1 = G1.ShortestPath(1,5);
     vector<int> path2 = G2.ShortestPath(1,4);
-
+    if( path1 == vector<int>{5,4,2,1}){
+        a = true;
+    }
+    if(path2 == vector<int>{4,2,1}){
+        b = true;
+    }
+if(a and b){
     return true;
-
-
+}
+else{
+    return false;
+}
 }    
 
 
