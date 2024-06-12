@@ -1,8 +1,25 @@
-#include "edges.hpp"
 #include "node.hpp"
+#include "edges.hpp"
 //include vector and using std::vector in node.hpp
 
 //define helper functions outside which need to work on vectors in general
+
+void node::MakeNeighborNodes(){
+if(this->neighbors.size() == 0){
+    return;
+}
+for(int i = 0; i != this->neighbors.size(); ++i){
+if(this == this->neighbors[i]->source){
+    this->NeighborNodes.push_back(this->neighbors[i]->end);
+}
+else if(this == this->neighbors[i]->end){
+    this->NeighborNodes.push_back(this->neighbors[i]->source);
+}
+
+}//end for loop
+
+}//end method
+
 
 //find node
 int FindNode(vector<node*> vec, int NameToFind){ //returns -1 if name not in vector
@@ -100,7 +117,9 @@ delete NewEdge;
 
 //shortest path will use Dijkstra's algorithm
 //disconected end node will result in nonsense output but will still output
-vector<node*> ShortestPath(int SourceIndex, int EndIndex){
+vector<int> ShortestPath(int SourceName, int EndName){
+int SourceIndex = FindNode(this->nodes,SourceName);
+int EndIndex = FindNode(this->nodes, EndName);
 node *source = this->nodes[SourceIndex];
 vector<node*> unvisited = this->nodes;
 //intialize sets
@@ -161,14 +180,14 @@ UnvisitiedDistance.erase(UnvisitiedDistance.begin()+CurrentNodeIndex);
 if(CurrentNode == this->nodes[EndIndex]){repeat = false;}
 }//end main while loop
 
-vector<node*> output;
-output.push_back(this->nodes[EndIndex]);
+vector<int> output;
+output.push_back(this->nodes[EndIndex]->name);
 
 //we are gaurenteed to have path to end at this point unless graph is disconected
 node* previous = PrevNode[EndIndex];
 
 while(previous != nullptr){
-output.push_back(previous);
+output.push_back(previous->name);
 int NextIndex = FindNode(this->nodes,previous->name);
 previous = PrevNode[NextIndex];
 }

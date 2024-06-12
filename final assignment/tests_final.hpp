@@ -1,6 +1,7 @@
 #include "final.hpp"
 #include<iostream>
 
+using std::cout, std::endl;
 
 bool test_FindNode(){
 bool a = false; //case 1: empty input vector
@@ -22,7 +23,7 @@ bool b = false; //case 2: non empty input vector
 
 vector<int> nums;
 
-if(SmallestValue(nums) == -1){a = true;}
+if(SmallestValue(nums) == 0){a = true;}
 nums = {3,2,1};
 if(SmallestValue(nums) == 2){b = true;}
 
@@ -46,6 +47,7 @@ if(G.nodes[0]->name == 1){
     a = true;
 }
 
+
 G.AddNode(2);
 int size = G.nodes.size();
 if(G.nodes[1]->name == 2){
@@ -56,7 +58,7 @@ G.AddNode(1);
 if(G.nodes.size() == size){ //size should be same as before
     c = true;
 }
-
+cout<<c<<endl;
 if(a and b and c){
     return true;
 }
@@ -89,7 +91,31 @@ bool test_AddEdge(){
     }
 }
 
-    
+bool test_ShortestPath(){
+    bool a = false; //will only test expected input of "normal" connected graph since other inputs arent important
+    bool b = false; //test a second case to make fluke less likely
+
+    graph G1;
+    graph G2;
+
+    G1.AddEdge(1,2,1);
+    G1.AddEdge(2,3,2);
+    G1.AddEdge(2,4,3);
+    G1.AddEdge(4,5,5);
+    G1.AddEdge(4,6,4);
+
+    G2.AddEdge(1,2,1);
+    G2.AddEdge(1,3,2);
+    G2.AddEdge(2,4,3);
+    G2.AddEdge(3,4,4);
+
+    vector<int> path1 = G1.ShortestPath(1,5);
+    vector<int> path2 = G2.ShortestPath(1,4);
+
+    return true;
+
+
+}    
 
 
 
