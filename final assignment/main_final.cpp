@@ -21,6 +21,13 @@ else if(!test_AddEdge()){
 else if(!test_ShortestPath()){
     cout << "shortestpath error" << endl;
 }
+else if(!test_MinTree()){
+    cout << "MinTree error" << endl;
+}
+
+
 else{cout << "no errors" << endl;}
+
+
 return EXIT_SUCCESS;
 }

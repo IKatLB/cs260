@@ -1,12 +1,13 @@
 #include "final.hpp"
-
+#include<iostream>
+using std::cout, std::endl;
 
 bool test_FindNode(){
 bool a = false; //case 1: empty input vector
 bool b = false; //case 2: non empty input vector
 
 vector<node*> test;
-if(FindNode(test, 1) == -1){a = true;}
+if(FindNode(test, 1) == -2){a = true;}
 node TestNode;
 TestNode.name = 1;
 test.push_back(&TestNode);
@@ -124,7 +125,30 @@ else{
 }
 }    
 
+bool test_MinTree(){
+    bool a = false; //correctly contains e1
+    bool b = false; //correctly contains e2
+    
+    
+    graph G;
+    G.AddEdge(1,2,1);
+    G.AddEdge(1,3,2);
+    G.AddEdge(2,3,4);
+    vector<edge*> g = G.MinTree();
 
+    int e1 = FindEdge(g,1,2);
+    int e2 = FindEdge(g,1,3);
+    if(e1 != -1){
+        a = true;
+    }
+    if(e2 != -1){
+        b = true;
+    }
+    if(a and b){
+    return true;
+    }
+    else{return false;}
+}
 
 
 

@@ -1,6 +1,7 @@
 #include "node.hpp"
 #include "edges.hpp"
-
+#include<iostream>
+using std::cout, std::endl;
 //include vector and using std::vector in node.hpp
 
 //define helper functions outside which need to work on vectors in general
@@ -20,7 +21,7 @@ else if(this == this->neighbors[i]->end){
 }//end for loop
 
 }//end method
-
+//n
 
 //find node
 int FindNode(vector<node*> vec, int NameToFind){ //returns -1 if name not in vector returs -2 if list is empty
@@ -41,6 +42,8 @@ if(n->name == NameToFind){
 }
 return index;
 }
+//n
+
 
 int FindEdge(vector<edge*> vec, int Node1, int Node2){// returns -1 if not in vector
     int index = -1;
@@ -52,6 +55,9 @@ int FindEdge(vector<edge*> vec, int Node1, int Node2){// returns -1 if not in ve
     }
 return index;
 }
+//n
+
+
 
 //find smallest value
 int SmallestValue(vector<int> input){
@@ -73,19 +79,63 @@ for(int i = 0; i < input.size(); ++i){ //should automatically exit for empty inp
 if(index == -1){index = 0;}//return first input in the event everything is -1, would happen in dissconnected graph
 return index;
 }
+//n
 
-vector<node*> NodesHit(vector<edge*> vec, vector<node*> output, node*start){
+
+
+bool NoCycle(vector<edge*> vec, vector<node*> output, node*start, node* prev){
 //populate output with starting node before calling function
 //define new neighbor edge vector with edges in vec
-//if new neighbors is empty return
-//else add new neighbor nodes to output and call Nodes hit on new neighbor nodes
+vector<edge*> NewNeighbors;
+for(int i = 0; i != start->neighbors.size(); ++i){
+    edge* EdgeToAdd = start->neighbors[i];
+    int found = FindEdge(vec,EdgeToAdd->source->name,EdgeToAdd->end->name);
+    bool reverse = (EdgeToAdd->end == start or EdgeToAdd->source == start) and (EdgeToAdd->end == prev or EdgeToAdd->source == prev); 
+    if(found == -1 or found == -2 or reverse){
+        continue;
+    }
+    if(EdgeToAdd->source == start){
+        //add edges other node to output
+        //call this on that node
+        int name = EdgeToAdd->end->name;
+        int FoundNode = FindNode(output,name);
+        if(FoundNode != -1 and FoundNode != -2){
+            
+            return false;
+        }
+        output.push_back(EdgeToAdd->end);
+        
+        if(!NoCycle(vec,output,EdgeToAdd->end,start)){
+            
+            return false;
+        }
+    }
+    else{
+        
+        int name = EdgeToAdd->source->name;
+        int FoundNode = FindNode(output,name);
+        if(FoundNode != -1 and FoundNode != -2){
+            
+            return false;
+            
+        }
+        output.push_back(EdgeToAdd->source);
+        if(!NoCycle(vec,output,EdgeToAdd->source, start)){
+            
+            return false;
+        }
+    }
 
 
 }
 
 
+//if new neighbors is empty return
+//else add new neighbor nodes to output and call Nodes hit on new neighbor nodes
+return true;
 
-
+}
+//n*2^n recursion inside for loop
 
 
 struct graph{
@@ -94,9 +144,10 @@ vector<node*> nodes;
 
 //methods
 
-//add node
+//add node  n
 void AddNode(int name){
-if(FindNode(this->nodes, name) != -1){return;} //node already exists
+int found = FindNode(this->nodes, name);
+if(found != -1 and found != -2 ){return;} //node already exists
 
 node *NewNode = new node; 
 NewNode->name = name;
@@ -104,7 +155,7 @@ this->nodes.push_back(NewNode);
 
 }
 
-//add edge
+//add edge n
 void AddEdge(int SourceName, int EndName, int weight){
 
 int SourceIndex = FindNode(this->nodes,SourceName);
@@ -112,11 +163,11 @@ int EndIndex = FindNode(this->nodes,EndName);
 
 
 //if node is not in graph add node. saves time when constructing tests
-if(SourceIndex == -1){
+if(SourceIndex == -1 or SourceIndex == -2){
     this->AddNode(SourceName);
     SourceIndex = FindNode(this->nodes,SourceName);
 }
-if(EndIndex == -1){
+if(EndIndex == -1 or EndIndex == -2){
     this->AddNode(EndName);
     EndIndex = FindNode(this->nodes,EndName);
 }
@@ -144,7 +195,7 @@ end->neighbors.push_back(NewEdge);
 }
 
 
-//shortest path will use Dijkstra's algorithm
+//shortest path will use Dijkstra's algorithm  n^2
 //disconected end node will result in nonsense output but will still output
 vector<int> ShortestPath(int SourceName, int EndName){
 int SourceIndex = FindNode(this->nodes,SourceName);
@@ -167,7 +218,7 @@ CurrentNode->MakeNeighborNodes();
 
 bool UnvisitedNeighbors = false;
 //check for unvisited neighbors
-for(int i = 0; i != CurrentNode->NeighborNodes.size(); ++i){
+for(int i = 0; i != CurrentNode->NeighborNodes.size(); ++i){ //n^2
     int NeighborName = CurrentNode->NeighborNodes[i]->name;
     int NeighborIndex = FindNode(unvisited,NeighborName);
     if(NeighborIndex != -1){UnvisitedNeighbors = true;}
@@ -231,49 +282,42 @@ return output;
 
 }//end shortest path
 
-//minimum spanning tree
+//minimum spanning tree   (n^2)*2^n
 vector<edge*> MinTree(){ //output will edge pointers that will be checked by find edge function
 vector<edge*> TreeEdges;
+vector<edge*> DummyEdges = this->edges;
 vector<int> values; // values associated with edge index, need so we can call smallest value
-for(int i = 0; i != this->edges.size(); ++i){
+for(int i = 0; i != this->edges.size(); ++i){ //n
 values.push_back(this->edges[i]->weight);
 }
 
 //while loop to select current edge
 //while loop to navigate tree until all edges have been touched or if we see the same node twice
-while(!values.empty()){
+while(!values.empty()){ //n^2*2^n
+
 int CurrentEdgeIndex = SmallestValue(values);
-edge* CurrentEdge = this->edges[CurrentEdgeIndex];
+edge* CurrentEdge = DummyEdges[CurrentEdgeIndex];
 node* OriginalNode = CurrentEdge->source;
 node* NewNode = CurrentEdge->end;
-vector<node*> TreeNodes;
+
 //push back current edge to output, navigate output tree
 //if node is touched twice pop back output
 TreeEdges.push_back(CurrentEdge);
 
-vector<node*> hit(1,NewNode);
-vector<node*> hit = NodesHit(TreeEdges,hit,NewNode);
-
-for(int i = 0; i != hit.size(); ++i){
-    int found = FindNode(TreeNodes,hit[i]->name);
-    //if found pop back output removing current edge
-    //break
-    //else
-    //treenodes.pushback(hit[i])
+vector<node*> hit{OriginalNode,NewNode};
+bool c = NoCycle(TreeEdges,hit,NewNode, OriginalNode);
+if(!c){
+    TreeEdges.pop_back();
 }
 
 
-
-
-
-
 //delete index from values
+values.erase(values.begin()+CurrentEdgeIndex);
+DummyEdges.erase(DummyEdges.begin()+CurrentEdgeIndex);
 }//end main while loop
 
 //compile Tree edges to be vector of nodes that form tree.
-
-
-
+return TreeEdges;
 }//end min tree
 
 
