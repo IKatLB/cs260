@@ -23,10 +23,11 @@ else if(this == this->neighbors[i]->end){
 
 
 //find node
-int FindNode(vector<node*> vec, int NameToFind){ //returns -1 if name not in vector
+int FindNode(vector<node*> vec, int NameToFind){ //returns -1 if name not in vector returs -2 if list is empty
 
 int index = -1;
 if(vec.size() == 0){
+    index = -2;
     return index;
 }
 
@@ -72,6 +73,19 @@ for(int i = 0; i < input.size(); ++i){ //should automatically exit for empty inp
 if(index == -1){index = 0;}//return first input in the event everything is -1, would happen in dissconnected graph
 return index;
 }
+
+vector<node*> NodesHit(vector<edge*> vec, vector<node*> output, node*start){
+//populate output with starting node before calling function
+//define new neighbor edge vector with edges in vec
+//if new neighbors is empty return
+//else add new neighbor nodes to output and call Nodes hit on new neighbor nodes
+
+
+}
+
+
+
+
 
 
 struct graph{
@@ -218,7 +232,49 @@ return output;
 }//end shortest path
 
 //minimum spanning tree
+vector<edge*> MinTree(){ //output will edge pointers that will be checked by find edge function
+vector<edge*> TreeEdges;
+vector<int> values; // values associated with edge index, need so we can call smallest value
+for(int i = 0; i != this->edges.size(); ++i){
+values.push_back(this->edges[i]->weight);
+}
 
+//while loop to select current edge
+//while loop to navigate tree until all edges have been touched or if we see the same node twice
+while(!values.empty()){
+int CurrentEdgeIndex = SmallestValue(values);
+edge* CurrentEdge = this->edges[CurrentEdgeIndex];
+node* OriginalNode = CurrentEdge->source;
+node* NewNode = CurrentEdge->end;
+vector<node*> TreeNodes;
+//push back current edge to output, navigate output tree
+//if node is touched twice pop back output
+TreeEdges.push_back(CurrentEdge);
+
+vector<node*> hit(1,NewNode);
+vector<node*> hit = NodesHit(TreeEdges,hit,NewNode);
+
+for(int i = 0; i != hit.size(); ++i){
+    int found = FindNode(TreeNodes,hit[i]->name);
+    //if found pop back output removing current edge
+    //break
+    //else
+    //treenodes.pushback(hit[i])
+}
+
+
+
+
+
+
+//delete index from values
+}//end main while loop
+
+//compile Tree edges to be vector of nodes that form tree.
+
+
+
+}//end min tree
 
 
 
